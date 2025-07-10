@@ -1,7 +1,5 @@
 package com.alibiner.TaxCalculator;
 
-import com.alibiner.TaxPrice;
-import com.alibiner.TaxRate;
 
 import java.util.List;
 
