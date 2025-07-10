@@ -3,5 +3,9 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Java 101/1-GPACalculator/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Java 101/1-GPACalculator/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Java 101/2-TaxCalculator/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Java 101/2-TaxCalculator/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Java 101/3-TriangleAreaCalculator/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Java 101/3-TriangleAreaCalculator/src/main/resources" charset="UTF-8" />
   </component>
 </project>
