@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/1-GPACalculator.iml" filepath="$PROJECT_DIR$/1-GPACalculator.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Baslangic_Seviye_Java_Backend_Web_Development_Patikasi.iml" filepath="$PROJECT_DIR$/.idea/Baslangic_Seviye_Java_Backend_Web_Development_Patikasi.iml" />
     </modules>
   </component>
