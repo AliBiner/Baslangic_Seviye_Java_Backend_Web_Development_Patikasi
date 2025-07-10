@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="3-TriangleAreaCalculator" />
         <module name="1-GPACalculator" />
+        <module name="Java101" />
       </profile>
     </annotationProcessing>
   </component>
