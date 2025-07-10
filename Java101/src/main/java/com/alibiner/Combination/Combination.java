@@ -5,9 +5,9 @@ import java.util.Scanner;
 public class Combination {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Kombinasyonun 1. değerini giriniz: "); //C(n,r) 1. değer = n
+        System.out.print("Kombinasyonun Elaman sayısını (n) giriniz: "); //C(n,r) 1. değer = n
         int n = scanner.nextInt();
-        System.out.print("Kombinasyonun 2. değerini giriniz: "); //C(n,r) 2. değer = r
+        System.out.print("Kombinasyonun Seçim sırasını (r) giriniz: "); //C(n,r) 2. değer = r
         int r = scanner.nextInt();
 
         //Formül: C(n,r) = n! / (r! * (n-r)!)
@@ -15,7 +15,7 @@ public class Combination {
         long rFactorial = factorial(r);
         long differenceN_R_Factorial = factorial(n-r);
 
-        long result = nFactorial / (rFactorial * differenceN_R_Factorial);
+        int result = (int) (nFactorial / (rFactorial * differenceN_R_Factorial));
         System.out.println(result);
 
     }
