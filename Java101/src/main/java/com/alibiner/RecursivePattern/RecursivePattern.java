@@ -11,16 +11,18 @@ public class RecursivePattern {
     }
 
     public static void pattern(int number, int temp, boolean way){
-        if (temp > 0 && way == true) {
+        if (temp > 0 && way) {
             System.out.print(temp + " ");
-            pattern(number, temp -= 5, way);
+            temp -= 5;
+            pattern(number, temp, way);
         }
         else {
             if (number < temp)
                 return;
             System.out.print(temp + " " );
             way = false;
-            pattern(number, temp += 5, way);
+            temp += 5;
+            pattern(number, temp, way);
         }
     }
 }
