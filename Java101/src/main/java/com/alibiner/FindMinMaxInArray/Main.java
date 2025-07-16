@@ -17,20 +17,27 @@ public class Main {
         }
         System.out.println();
 
-        int min = array[0];
+        int controlValue = 50;
+
+        int min = 0;
         for (int value : array) {
-            if (value<min)
-                min = value;
+            if (value < controlValue){
+                if (value>min)
+                    min = value;
+            }
         }
+        String minResult = min == 0 ? controlValue + "'dan küçük değer bulunamadı." : "Min: " + min;
+        System.out.println(minResult);
 
-        System.out.println("Min: " + min);
-
-        int max = array[0];
+        int max = controlValue;
         for (int value : array){
-            if (value>max)
-                max = value;
+            if (value>controlValue){
+                if (value>max)
+                    max = value;
+            }
         }
-        System.out.println("Max: " + max);
+        String maxResult = max == controlValue ? controlValue + "'dan büyük değer bulunamadı." : "Max: " + max;
+        System.out.println(maxResult);
 
     }
 }
