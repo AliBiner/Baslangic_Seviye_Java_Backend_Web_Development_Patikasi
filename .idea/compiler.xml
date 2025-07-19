@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="OOP" />
         <module name="1-GPACalculator" />
+        <module name="GraduationProject" />
         <module name="3-TriangleAreaCalculator" />
         <module name="Java101" />
       </profile>
