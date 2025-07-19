@@ -6,8 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="3-TriangleAreaCalculator" />
+        <module name="OOP" />
         <module name="1-GPACalculator" />
+        <module name="3-TriangleAreaCalculator" />
         <module name="Java101" />
       </profile>
     </annotationProcessing>
