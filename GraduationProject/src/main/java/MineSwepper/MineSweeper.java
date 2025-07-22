@@ -4,186 +4,174 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class MineSweeper {
-    private int sweeperRowCount;
-    private int sweeperColumnCount;
+    private int rowCount;
+    private int columnCount;
     private int mineCount;
-    private char[][] invisibleSweeper;
-    private CustomScanner scanner;
-    private String[] mineLocations;
-    private String[][] visibleSweeper;
-    private int unopenedCount;
+    private char[][] mineGrid;
+    private String[] mineCoordinates;
+    private String[][] gameBoard;
+    private int safeCellsToReveal;
+    private final boolean cheatMode;
 
-    public MineSweeper() {
+    private final CustomScanner scanner;
+
+    public MineSweeper(boolean cheatMode) {
+        this.cheatMode = cheatMode;
         this.scanner = new CustomScanner();
-        setSweeperRowCount();
-        setSweeperColumnCount();
-        setEmptySweeper();
-        setMineCount();
-        calculateMineLocation();
-        setVisibleSweeper();
-        setUnopenedCount();
+        promptBoardDimensions();
+        initializeGameBoard();
+        calculateMineCoordinates();
+        this.safeCellsToReveal = (rowCount*columnCount) - this.mineCount;
     }
 
-    public String[] calculateMineLocation() {
-        this.mineLocations = new String[mineCount];
+    private void promptBoardDimensions() {
+        this.rowCount = scanner.getAbsoluteRange("Satır sayısı giriniz (en az 2): ", 2);
+        this.columnCount = scanner.getAbsoluteRange("Sütun sayısı giriniz (en az 2): ", 2);
+    }
+
+    private void initializeGameBoard() {
+        this.gameBoard = new String[rowCount][columnCount];
+        this.mineGrid = new char[rowCount][columnCount];
+        for (int i = 0; i < rowCount; i++) {
+            Arrays.fill(gameBoard[i], "-"); // Oyuncu tahtasındaki tüm hücreler kapalı
+            Arrays.fill(mineGrid[i],'-');
+        }
+    }
+
+    private void calculateMineCoordinates() {
+         this.mineCount = (rowCount * columnCount) / 4; // calculate mine count
+
+        this.mineCoordinates = new String[mineCount];
+
         Random random = new Random();
-        for (int i = 0; i < mineLocations.length; i++) {
-            mineLocations[i] = String.valueOf(random.nextInt(sweeperRowCount)).concat(String.valueOf(random.nextInt(sweeperColumnCount)));
-            int whileIndex = 0;
-            while (whileIndex < mineLocations.length) {
-                if (i == whileIndex) whileIndex++;
-                else if (mineLocations[i].equals(mineLocations[whileIndex])) {
-                    mineLocations[i] = String.valueOf(random.nextInt(sweeperRowCount)).concat(String.valueOf(random.nextInt(sweeperColumnCount)));
-                    whileIndex = 0;
+
+        for (int rowIteratorOfOuter = 0; rowIteratorOfOuter < mineCoordinates.length; rowIteratorOfOuter++) {
+
+            mineCoordinates[rowIteratorOfOuter] = String.valueOf(random.nextInt(rowCount)) + String.valueOf(random.nextInt(columnCount));
+
+            int rowIteratorOfInner = 0;
+            while (rowIteratorOfInner < mineCoordinates.length) {
+
+                if (rowIteratorOfOuter == rowIteratorOfInner) rowIteratorOfInner++;
+                else if (mineCoordinates[rowIteratorOfOuter].equals(mineCoordinates[rowIteratorOfInner])) {
+                    mineCoordinates[rowIteratorOfOuter] = String.valueOf(random.nextInt(rowCount)).concat(String.valueOf(random.nextInt(columnCount)));
+                    rowIteratorOfInner = 0;
                 } else {
-                    whileIndex++;
+                    rowIteratorOfInner++;
                 }
             }
-            if (mineLocations[i].length() < 2) {
-                mineLocations[i] = "0" + mineLocations[i];
+
+            if (mineCoordinates[rowIteratorOfOuter].length() < 2) {
+                mineCoordinates[rowIteratorOfOuter] = "0" + mineCoordinates[rowIteratorOfOuter];
             }
         }
-        Arrays.sort(mineLocations);
-        return mineLocations;
+        placeMines();
     }
 
-    private void setSweeperRowCount() {
-        this.sweeperRowCount = scanner.getAbsoluteRange("Satır sayısı giriniz : ", 2);
-    }
-
-    private void setSweeperColumnCount() {
-        this.sweeperColumnCount = scanner.getAbsoluteRange("Sütun Sayısı giriniz : ", 2);
-    }
-
-    private void setMineCount() {
-        this.mineCount = (sweeperColumnCount * sweeperRowCount) / 4;
-    }
-
-    public void setEmptySweeper() {
-        this.invisibleSweeper = new char[sweeperRowCount][sweeperColumnCount];
-    }
-
-    private void setVisibleSweeper() {
-        this.visibleSweeper = new String[sweeperRowCount][sweeperColumnCount];
-        for (int i = 0; i < visibleSweeper.length; i++) {
-            for (int j = 0; j < visibleSweeper[i].length; j++) {
-                visibleSweeper[i][j] = "-";
-            }
-        }
-    }
-
-    private void setUnopenedCount() {
-        this.unopenedCount = (sweeperRowCount*sweeperColumnCount) - mineCount;
-    }
-
-    public char[][] getInvisibleSweeper() {
-        return invisibleSweeper;
-    }
-
-    public String[][] getVisibleSweeper() {
-        return visibleSweeper;
-    }
-
-    public void fillMineSweeper() {
-        if (mineLocations == null)
-            System.out.println("Mayın konumları bulunamadı. Lütfen mayın konumlarını hesaplayın.");
+    private void placeMines() {
+        if (mineCoordinates == null)
+            calculateMineCoordinates();
         else {
-            for (int i = 0; i < invisibleSweeper.length; i++) {
-                for (int j = 0; j < invisibleSweeper[i].length ; j++) {
-                    for (String mineLocation : mineLocations){
-                        if ((String.valueOf(i)+String.valueOf(j)).contains(mineLocation)){
-                            invisibleSweeper[i][j] = '*';
+            for (int rowIterator = 0; rowIterator < mineGrid.length; rowIterator++) {
+                for (int columnIterator = 0; columnIterator < mineGrid[rowIterator].length ; columnIterator++) {
+                    for (String mineLocation : mineCoordinates){
+                        if ((String.valueOf(rowIterator)+String.valueOf(columnIterator)).contains(mineLocation)){
+                            mineGrid[rowIterator][columnIterator] = '*';
                             break;
                         }
                         else
-                            invisibleSweeper[i][j] = '-';
+                            mineGrid[rowIterator][columnIterator] = '-';
                     }
                 }
             }
         }
     }
 
-    public void showMineSweeper(char[][] mineSweeper) {
-        for (int i = 0; i < mineSweeper.length; i++) {
-            for (int j = 0; j < mineSweeper[i].length; j++) {
-                System.out.print(mineSweeper[i][j] + " ");
-            }
-            System.out.println();
-        }
+    private boolean isMineAt(String location) {
+        return Arrays.stream(mineCoordinates).anyMatch(element -> element.contains(location));
     }
 
-    public void showMineSweeper(String[][] mineSweeper) {
-        for (int i = 0; i < mineSweeper.length; i++) {
-            for (int j = 0; j < mineSweeper[i].length; j++) {
-                System.out.print(mineSweeper[i][j] + " ");
-            }
-            System.out.println();
+    private void revealCell(int x, int y){
+        if (isCellRevealed(x,y)){
+            System.out.println("Bu konumu daha önce açtınız. Lütfen başka bir konum seçin.");
+            return;
         }
+        int mineCountAround = countAdjacentMines(x,y);
+        gameBoard[x][y] = String.valueOf(mineCountAround);
+        safeCellsToReveal--;
     }
 
-    public boolean isMineHere(String location) {
-        for (String mineLocation : mineLocations) {
-            if (location.contains(mineLocation)){
-                return true;
-            }
-        }
-        return false;
+    private boolean isCellRevealed(int x, int y){
+        return !gameBoard[x][y].equals("-");
     }
 
-    public int areThereMinesAround(int x, int y) { //1,2
+    private int countAdjacentMines(int row, int column) {
         int mineCountAround = 0;
-        for (int j = x - 1; j <= x + 1; j++) {
-            for (int k = y - 1; k <= y + 1; k++) {
-                for (String mineLocation : mineLocations){
-                    if (mineLocation.contains(String.valueOf(j) + String.valueOf(k) ))
-                        mineCountAround++;
-                }
+        for (int rowIterator = row - 1; rowIterator <= row + 1; rowIterator++) {
+            for (int columnIterator = column - 1; columnIterator <= column + 1; columnIterator++) {
+                String xyAxis = String.valueOf(rowIterator) + String.valueOf(columnIterator);
+                boolean isMatch = Arrays.stream(mineCoordinates).anyMatch(element -> element.contains(xyAxis));
+                if (isMatch)
+                    mineCountAround++;
             }
         }
         return mineCountAround;
     }
 
-    public void run(){
-        String xyLocation;
-        int xAxis;
-        int yAxis;
-        do {
-             xAxis = scanner.getAbsoluteRange("Açmak istediğiniz satır numarasını giriniz (1 ile "+ sweeperColumnCount +" arasında) : "  ,1,
-                    sweeperRowCount) -1;
-             yAxis = scanner.getAbsoluteRange("Açmak istediğiniz sütun numarasını giriniz ( 1 ile "+ sweeperColumnCount + " arasında) : ",1,
-                    sweeperColumnCount) -1;
-            xyLocation = String.valueOf(xAxis) + String.valueOf(yAxis);
-            if (!isOpened(xAxis,yAxis)){
-                openIndex(xAxis,yAxis);
-                unopenedCount--;
-                showMineSweeper(visibleSweeper);
-            }
-            else {
-                System.out.println("Bu konum açılmıştır. Başka bir konum giriniz.");
-            }
-        }while (!isMineHere(xyLocation) && !isWin());
-        if (isWin())
-            System.out.println("Kazandınız!");
-        else
-            System.out.println("Kaybettiniz!");
-        showMineSweeper(getInvisibleSweeper());
-
-    };
-
-    public boolean isWin(){
-        return unopenedCount <= 0;
+    private boolean isGameWon(){
+        return safeCellsToReveal <= 0; 
     }
 
-    public void openIndex(int x, int y){
-        if (!isOpened(x,y)){
-            int mineCountAround = areThereMinesAround(x,y);
-            visibleSweeper[x][y] = String.valueOf(mineCountAround);
+    private void printBoard(char[][] board) {
+        for (char[] row : board) {
+            for (char cell : row) {
+                System.out.print(cell + " ");
+            }
+            System.out.println();
         }
-        else
-            System.out.println("Bu konum açılmıştır. Başka bir konum giriniz.");
     }
 
-    public boolean isOpened(int x, int y){
-        return visibleSweeper[x][y].equals("-") ? false : true;
+    private void printBoard(String[][] board) {
+        for (String[] row : board) {
+            for (String cell : row) {
+                System.out.print(cell + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void play(){
+        if (cheatMode){
+            printBoard(mineGrid);
+
+            System.out.println();
+            System.out.println("------------------------------------------------");
+            System.out.println();
+        }
+        String xyAxis;
+        int selectedRow;
+        int selectedColumn;
+
+        do {
+            printBoard(gameBoard);
+            selectedRow = scanner.getAbsoluteRange("Açmak istediğiniz satır numarasını giriniz (1 ile "+ rowCount +" arasında) : "  ,1,
+                    rowCount) -1;
+            selectedColumn = scanner.getAbsoluteRange("Açmak istediğiniz sütun numarasını giriniz ( 1 ile "+ columnCount + " arasında) : ",1,
+                    columnCount) -1;
+            xyAxis = String.valueOf(selectedRow) + String.valueOf(selectedColumn);
+            if (isMineAt(xyAxis)){
+                System.out.println("Mayına bastınız! Oyunu kaybettiniz. \uD83D\uDCA3");
+                break;
+            }
+            revealCell(selectedRow,selectedColumn);
+            System.out.println();
+            System.out.println("------------------------------------------------");
+            System.out.println();
+        }while (!isGameWon());
+
+        if (isGameWon())
+            System.out.println("Tebrikler, tüm güvenli hücreleri açtınız! Kazandınız! \uD83C\uDF89");
+        System.out.println("--- Mayınların Gerçek Konumu ---");
+        printBoard(mineGrid);
     }
 }

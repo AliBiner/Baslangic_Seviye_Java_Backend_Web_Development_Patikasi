@@ -27,13 +27,18 @@ public class CustomScanner {
                     return tmp;
                 }
             } catch (InputMismatchException e) {
-                // if user enters a non-integer, show error and ask again
-                System.out.println("Hatalı giriş! Lütfen tam sayı giriniz.");
-                scanner.nextLine(); // clear the invalid input
-            } catch (NumberFormatException e) {
-                // If the value is too big or not a number, show this message
-                System.out.println("Hatalı Giriş! Lütfen " + Integer.MIN_VALUE + " - " + Integer.MAX_VALUE + "arasında bir değer giriniz.");
-                scanner.nextLine(); // clear the invalid input
+                if (e.getMessage() == null)
+                {
+                    // if user enters a non-integer, show error and ask again
+                    System.out.println("Hatalı giriş! Lütfen tam sayı giriniz.");
+                    scanner.nextLine(); // clear the invalid input
+                }
+                else {
+                    // If the value is too big or not a number, show this message
+                    System.out.println("Hatalı Giriş! Lütfen " + Integer.MIN_VALUE + " - " + Integer.MAX_VALUE + " " +
+                            "arasında bir değer giriniz.");
+                    scanner.nextLine(); // clear the invalid input
+                }
             }
         }
         return input;
@@ -56,14 +61,18 @@ public class CustomScanner {
                 else
                     return tmp;
             } catch (InputMismatchException e) {
-                // if user enters a non-integer, show error and ask again
-                System.out.println("Hatalı giriş! Lütfen tam sayı giriniz.");
-                scanner.nextLine(); // clear the invalid input
-            }
-            catch (NumberFormatException e) {
-                // If the value is too big or not a number, show this message
-                System.out.println("Hatalı Giriş! Lütfen " + Integer.MIN_VALUE + " - " + Integer.MAX_VALUE + "arasında bir değer giriniz." );
-                scanner.nextLine(); // clear the invalid input
+                if (e.getMessage() == null)
+                {
+                    // if user enters a non-integer, show error and ask again
+                    System.out.println("Hatalı giriş! Lütfen tam sayı giriniz.");
+                    scanner.nextLine(); // clear the invalid input
+                }
+                else {
+                    // If the value is too big or not a number, show this message
+                    System.out.println("Hatalı Giriş! Lütfen " + Integer.MIN_VALUE + " - " + Integer.MAX_VALUE + " " +
+                            "arasında bir değer giriniz.");
+                    scanner.nextLine(); // clear the invalid input
+                }
             }
         }
         return input;
