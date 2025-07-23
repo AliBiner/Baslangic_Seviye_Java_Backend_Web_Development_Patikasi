@@ -7,7 +7,7 @@ public class MineSweeper {
     private int rowCount;
     private int columnCount;
     private int mineCount;
-    private char[][] mineGrid;
+    private Character[][] mineGrid;
     private String[] mineCoordinates;
     private String[][] gameBoard;
     private int safeCellsToReveal;
@@ -31,7 +31,7 @@ public class MineSweeper {
 
     private void initializeGameBoard() {
         this.gameBoard = new String[rowCount][columnCount];
-        this.mineGrid = new char[rowCount][columnCount];
+        this.mineGrid = new Character[rowCount][columnCount];
         for (int i = 0; i < rowCount; i++) {
             Arrays.fill(gameBoard[i], "-"); // Oyuncu tahtasındaki tüm hücreler kapalı
             Arrays.fill(mineGrid[i],'-');
@@ -122,23 +122,32 @@ public class MineSweeper {
         return safeCellsToReveal <= 0; 
     }
 
-    private void printBoard(char[][] board) {
-        for (char[] row : board) {
-            for (char cell : row) {
+    private <T> void printBoard(T[][] matris){
+        for (T[] row : matris){
+            for (T cell : row){
                 System.out.print(cell + " ");
             }
             System.out.println();
         }
     }
 
-    private void printBoard(String[][] board) {
-        for (String[] row : board) {
-            for (String cell : row) {
-                System.out.print(cell + " ");
-            }
-            System.out.println();
-        }
-    }
+//    private void printBoard(char[][] board) {
+//        for (char[] row : board) {
+//            for (char cell : row) {
+//                System.out.print(cell + " ");
+//            }
+//            System.out.println();
+//        }
+//    }
+//
+//    private void printBoard(String[][] board) {
+//        for (String[] row : board) {
+//            for (String cell : row) {
+//                System.out.print(cell + " ");
+//            }
+//            System.out.println();
+//        }
+//    }
 
     public void play(){
         if (cheatMode){
